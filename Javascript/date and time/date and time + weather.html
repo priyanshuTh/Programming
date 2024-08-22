@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>Today's Date and Weather</title>
+    </head>
+    <body>
+        <script type="text/javascript">
+            let d = new Date();
+            let timeZones = [
+                { zone: 'Asia/Taipei', name: 'Taiwan, Taipei', lat: 25.0330, lon: 121.5654 },
+                { zone: 'America/New_York', name: 'New York, USA', lat: 40.7128, lon: -74.0060 },
+                { zone: 'Europe/London', name: 'London, UK', lat: 51.5074, lon: -0.1278 },
+                { zone: 'Europe/Paris', name: 'Paris, France', lat: 48.8566, lon: 2.3522 },
+                { zone: 'Asia/Tokyo', name: 'Tokyo, Japan', lat: 35.6895, lon: 139.6917 },
+            ];
+
+            let options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            let output = '';
+
+            const apiKey = 'a00298fcd5c53676bbce634284ea27cc'; // Your OpenWeatherMap API key
+
+            Promise.all(timeZones.map(timeZone => {
+                let localDate = d.toLocaleString('en-US', { ...options, timeZone: timeZone.zone });
+                return fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${timeZone.lat}&lon=${timeZone.lon}&appid=${apiKey}&units=metric`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let weather = data.weather[0].description;
+                        let temperature = data.main.temp;
+                        output += `<h1>Today's date and time in ${timeZone.name} is ${localDate}</h1>`;
+                        output += `<h2>Current weather: ${weather}, Temperature: ${temperature}°C</h2>`;
+                    })
+                    .catch(error => console.error('Error fetching weather data:', error));
+            })).then(() => {
+                document.body.innerHTML = output;
+            });
+        </script>
+    </body>
+</html>

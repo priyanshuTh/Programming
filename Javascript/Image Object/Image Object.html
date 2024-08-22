@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Example of Image Object</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma;
+        }
+        .result {
+            font-size: 18px;
+            font-weight: 500;
+        }
+        button {
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <h1>The Image() Object in JavaScript</h1>
+    <div class="result"><br/></div>
+    <button class="Btn">Click Here</button>
+    <script>
+        const resEle = document.querySelector(".result");
+        const BtnEle = document.querySelector(".Btn");
+        const newImage = new Image(1000, 800);
+        newImage.src = "Taipei.jpg";
+        BtnEle.addEventListener("click", () => {
+            resEle.appendChild(newImage);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<html>
+    <body>
+        <script type="text/javascript">
+            function over() {
+                document.getElementById("message").innerText = "Mouse Over";
+            }
+            function out() {
+                document.getElementById("message").innerText = "Mouse Out";
+            }
+        </script>
+        <p>Bring your mouse inside the division to see the result:</p>
+        <div onmouseover="over()" onmouseout="out()">
+            <h2>This is inside the division</h2>
+        </div>
+        <p id="message"></p> <!-- This paragraph will display the messages -->
+    </body>
+</html>

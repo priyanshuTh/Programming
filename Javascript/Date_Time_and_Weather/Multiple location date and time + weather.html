@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Today's Date and Weather</title>
+        <style>
+            body {
+                background-color: rgb(96, 177, 243);
+            }
+        </style>
+    </head>
+    <body>
+        <script type="text/javascript">
+            const apiKey = 'b07b35f2f6d90022405686bf331d890e'; // Your OpenWeatherMap API key
+            const timeZones = [
+                { zone: 'Asia/Kathmandu', name: 'Kathmandu, Nepal', lat: 27.7172, lon: 85.3240 },
+                { zone: 'Asia/Taipei', name: 'Taiwan, Taipei', lat: 25.0330, lon: 121.5654 },
+                { zone: 'America/New_York', name: 'New York, USA', lat: 40.7128, lon: -74.0060 },
+                { zone: 'Europe/London', name: 'London, UK', lat: 51.5074, lon: -0.1278 },
+                { zone: 'Europe/Paris', name: 'Paris, France', lat: 48.8566, lon: 2.3522 },
+                { zone: 'Asia/Tokyo', name: 'Tokyo, Japan', lat: 35.6895, lon: 139.6917 },
+            ];
+            const options = {
+                dateOptions: { day: 'numeric', month: 'long', year: 'numeric' },timeOptions: { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }};
+
+            function updateWeatherAndTime() {
+                let output = '';
+                const d = new Date();
+
+                Promise.all(timeZones.map(timeZone => {
+                    let localDate = d.toLocaleString('en-US', { ...options, timeZone: timeZone.zone });
+                    return fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${timeZone.lat}&lon=${timeZone.lon}&appid=${apiKey}&units=metric`)
+                        .then(response => response.json())
+                        .then(data => {
+                            let weather = data.weather[0].description;
+                            let temperature = data.main.temp;
+                            output += `<h1>Today's date and time in ${timeZone.name} is ${localDate}</h1>`;
+                            output += `<h2>Current weather: ${weather}, Temperature: ${temperature}°C</h2>`;
+                        })
+                        .catch(error => console.error('Error fetching weather data:', error));
+                })).then(() => {
+                    document.body.innerHTML = output;
+                });
+            }
+
+            // Update the content every 60 seconds (60000 milliseconds)
+            setInterval(updateWeatherAndTime, 59000);
+
+            // Initial call to populate the content
+            updateWeatherAndTime();
+        </script>
+    </body>
+</html>
